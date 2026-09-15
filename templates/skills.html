@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Skills | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 40px 7%;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+        }
+
+        .skills-container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 35px auto;
+        }
+
+        .skills-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .skills-card h2 {
+            margin-bottom: 5px;
+        }
+
+        .skills-card > p {
+            margin-bottom: 20px;
+        }
+
+        .add-skill-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .add-skill-form input {
+            flex: 1;
+        }
+
+        .add-skill-form button {
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .skill-item {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .skill-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .skill-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 35px 20px;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .navigation .btn {
+            width: auto;
+        }
+
+        @media (max-width: 600px) {
+
+            .skills-container {
+                width: 94%;
+            }
+
+            .page-header {
+                padding: 35px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .add-skill-form {
+                flex-direction: column;
+            }
+
+            .add-skill-form button {
+                width: 100%;
+            }
+
+            .navigation .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/courses">Courses</a>
+            <a href="/mentors">Mentors</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <section class="page-header">
+
+        <h1>
+            🧠 My Skills
+        </h1>
+
+        <p>
+            Manage your skills and personalize your learning journey.
+        </p>
+
+    </section>
+
+
+    <!-- Main Content -->
+
+    <main class="skills-container">
+
+
+        <!-- Add Skill -->
+
+        <section class="skills-card">
+
+            <h2>
+                ➕ Add a New Skill
+            </h2>
+
+            <p>
+                Add skills you are interested in learning or improving.
+            </p>
+
+            <form
+                method="POST"
+                action="/add_skill"
+                class="add-skill-form"
+            >
+
+                <input
+                    type="text"
+                    name="skill_name"
+                    placeholder="Example: Python, Java, Data Science..."
+                    required
+                >
+
+                <button type="submit">
+                    ➕ Add Skill
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Skills List -->
+
+        <section class="skills-card">
+
+            <h2>
+                📋 Your Skills
+            </h2>
+
+            <p>
+                Skills currently added to your profile.
+            </p>
+
+
+            {% if skills %}
+
+                <div class="skills-grid">
+
+                    {% for skill in skills %}
+
+                        <div class="skill-item">
+
+                            <div class="skill-name">
+
+                                <span class="skill-icon">
+                                    💡
+                                </span>
+
+                                <span>
+                                    {{ skill[1] }}
+                                </span>
+
+                            </div>
+
+                            <a
+                                href="/delete_skill/{{ skill[0] }}"
+                                class="delete-btn"
+                                onclick="return confirm('Are you sure you want to delete this skill?');"
+                            >
+                                Delete
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🧠
+                    </div>
+
+                    <h3>
+                        No skills added yet
+                    </h3>
+
+                    <p>
+                        Add your first skill above to personalize
+                        your SkillSphere experience.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Navigation -->
+
+        <div class="navigation">
+
+            <a href="/dashboard" class="btn">
+                ← Dashboard
+            </a>
+
+            <a href="/recommendations" class="btn">
+                🎯 View Recommendations
+            </a>
+
+        </div>
+
+
+    </main>
+
+</body>
+</html>

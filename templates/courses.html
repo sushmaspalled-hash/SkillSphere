@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Courses | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        /* Page Header */
+
+        .page-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 42px 7%;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+        }
+
+        /* Main */
+
+        .courses-container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        /* Intro */
+
+        .intro-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .intro-card h2 {
+            margin-bottom: 6px;
+        }
+
+        /* Course Grid */
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .course-card {
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            min-height: 270px;
+        }
+
+        .course-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 15px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 31px;
+            margin-bottom: 17px;
+        }
+
+        .course-card h3 {
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .course-card p {
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .course-tag {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .course-card .btn {
+            margin-top: auto;
+            text-align: center;
+        }
+
+        /* Navigation */
+
+        .bottom-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .bottom-navigation .btn {
+            width: auto;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+            .course-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .courses-container {
+                width: 94%;
+            }
+
+            .page-header {
+                padding: 35px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-navigation .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/skills">My Skills</a>
+            <a href="/mentors">Mentors</a>
+            <a href="/recommendations">Recommendations</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <section class="page-header">
+
+        <h1>
+            📚 Explore Courses
+        </h1>
+
+        <p>
+            Learn new skills and move closer to your career goals.
+        </p>
+
+    </section>
+
+
+    <!-- Main -->
+
+    <main class="courses-container">
+
+
+        <!-- Introduction -->
+
+        <section class="intro-card">
+
+            <h2>
+                🎯 Choose What You Want to Learn
+            </h2>
+
+            <p>
+                Explore our available courses, learn topic by topic,
+                and track your progress as you grow your skills.
+            </p>
+
+        </section>
+
+
+        <!-- Courses -->
+
+        <div class="course-grid">
+
+
+            <!-- Python -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🐍
+                </div>
+
+                <h3>
+                    Python Programming
+                </h3>
+
+                <p>
+                    Learn Python fundamentals, programming concepts,
+                    functions, data structures, and more.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Beginner
+                    </span>
+
+                    <span class="course-tag">
+                        Programming
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/Python"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+            <!-- Data Science -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Data Science
+                </h3>
+
+                <p>
+                    Discover data analysis, visualization,
+                    machine learning concepts, and data-driven thinking.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Intermediate
+                    </span>
+
+                    <span class="course-tag">
+                        Data
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/Data%20Science"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+            <!-- Web Development -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🌐
+                </div>
+
+                <h3>
+                    Web Development
+                </h3>
+
+                <p>
+                    Learn how websites work and build applications
+                    using HTML, CSS, JavaScript, and backend concepts.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Beginner
+                    </span>
+
+                    <span class="course-tag">
+                        Web
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/Web%20Development"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+            <!-- Java -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    ☕
+                </div>
+
+                <h3>
+                    Java Programming
+                </h3>
+
+                <p>
+                    Build a strong foundation in Java programming,
+                    object-oriented concepts, and application development.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Beginner
+                    </span>
+
+                    <span class="course-tag">
+                        Programming
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/Java"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+            <!-- Machine Learning -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    Machine Learning
+                </h3>
+
+                <p>
+                    Understand machine learning fundamentals,
+                    algorithms, model training, and prediction.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Intermediate
+                    </span>
+
+                    <span class="course-tag">
+                        AI
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/Machine%20Learning"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+            <!-- SQL -->
+
+            <div class="course-card">
+
+                <div class="course-icon">
+                    🗄️
+                </div>
+
+                <h3>
+                    SQL & Databases
+                </h3>
+
+                <p>
+                    Learn databases, SQL queries, data management,
+                    tables, relationships, and database operations.
+                </p>
+
+                <div class="course-meta">
+
+                    <span class="course-tag">
+                        Beginner
+                    </span>
+
+                    <span class="course-tag">
+                        Database
+                    </span>
+
+                </div>
+
+                <a
+                    href="/course/SQL"
+                    class="btn"
+                >
+                    Start Course →
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <div class="bottom-navigation">
+
+            <a href="/dashboard" class="btn">
+                ← Dashboard
+            </a>
+
+            <a href="/recommendations" class="btn">
+                🎯 Recommendations
+            </a>
+
+        </div>
+
+
+    </main>
+
+</body>
+</html>

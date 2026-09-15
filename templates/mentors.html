@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Find Mentors | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        /* Page Header */
+
+        .page-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            padding: 42px 7%;
+            color: white;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+        }
+
+        /* Main */
+
+        .mentors-container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        /* Search */
+
+        .search-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .search-card h2 {
+            margin-bottom: 5px;
+        }
+
+        .search-card p {
+            margin-bottom: 18px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 0;
+        }
+
+        .search-form input {
+            flex: 1;
+        }
+
+        .search-form button {
+            width: auto;
+            white-space: nowrap;
+        }
+
+        /* Mentor Grid */
+
+        .mentor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .mentor-card {
+            margin: 0;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mentor-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .mentor-card h3 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .specialization {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .mentor-skills {
+            margin: 10px 0 18px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 3px;
+        }
+
+        .mentor-actions {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mentor-actions a {
+            text-align: center;
+        }
+
+        .message-btn {
+            background: #2563eb;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 9px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        /* Empty */
+
+        .empty-state {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 12px;
+        }
+
+        /* Bottom Navigation */
+
+        .bottom-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .bottom-navigation .btn {
+            width: auto;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+            .mentor-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .mentors-container {
+                width: 94%;
+            }
+
+            .page-header {
+                padding: 35px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form button {
+                width: 100%;
+            }
+
+            .mentor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-navigation .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/skills">My Skills</a>
+            <a href="/courses">Courses</a>
+            <a href="/recommendations">Recommendations</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Header -->
+
+    <section class="page-header">
+
+        <h1>
+            👨‍🏫 Find a Mentor
+        </h1>
+
+        <p>
+            Connect with mentors and get guidance to improve your skills.
+        </p>
+
+    </section>
+
+
+    <!-- Main -->
+
+    <main class="mentors-container">
+
+
+        <!-- Search -->
+
+        <section class="search-card">
+
+            <h2>
+                🔍 Find the Right Mentor
+            </h2>
+
+            <p>
+                Search mentors by name, specialization, or skill.
+            </p>
+
+            <form method="GET" action="/mentors" class="search-form">
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search if search else '' }}"
+                    placeholder="Search for Python, Data Science, Web Development..."
+                >
+
+                <button type="submit">
+                    🔍 Search
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Mentor Results -->
+
+        {% if mentors %}
+
+            <div class="mentor-grid">
+
+                {% for mentor in mentors %}
+
+                    <div class="mentor-card">
+
+                        <div class="mentor-avatar">
+                            👨‍🏫
+                        </div>
+
+                        <h3>
+                            {{ mentor[1] }}
+                        </h3>
+
+                        <div class="specialization">
+                            {{ mentor[2] }}
+                        </div>
+
+                        <p>
+                            Experienced mentor available to guide students
+                            in their learning journey.
+                        </p>
+
+
+                        <div class="mentor-skills">
+
+                            {% if mentor[3] %}
+
+                                {% for skill in mentor[3].split(',') %}
+
+                                    <span class="skill-tag">
+                                        {{ skill.strip() }}
+                                    </span>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <span class="skill-tag">
+                                    General Mentoring
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="mentor-actions">
+
+                            <a
+                                href="/message_mentor/{{ mentor[0] }}"
+                                class="btn message-btn"
+                            >
+                                💬 Message Mentor
+                            </a>
+
+                            <a
+                                href="/delete_mentor/{{ mentor[0] }}"
+                                class="delete-btn"
+                                onclick="return confirm('Are you sure you want to delete this mentor?');"
+                            >
+                                🗑️ Delete Mentor
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h2>
+                    No mentors found
+                </h2>
+
+                <p>
+                    Try a different search term or add a mentor.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Bottom Navigation -->
+
+        <div class="bottom-navigation">
+
+            <a href="/dashboard" class="btn">
+                ← Dashboard
+            </a>
+
+            <a href="/add_mentor" class="btn">
+                ➕ Add Mentor
+            </a>
+
+        </div>
+
+
+    </main>
+
+</body>
+</html>

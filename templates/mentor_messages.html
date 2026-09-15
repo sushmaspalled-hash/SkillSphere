@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Messages | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .messages-page {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 35px;
+            border-radius: 18px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: white;
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+            margin: 0;
+        }
+
+        .message-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .student-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .student-info h3 {
+            margin: 0 0 5px;
+            color: #172033;
+        }
+
+        .student-info p {
+            margin: 0;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .message-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 10px;
+        }
+
+        .message-box p {
+            margin: 0;
+            color: #344054;
+            line-height: 1.6;
+        }
+
+        .message-time {
+            color: #98a2b3;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .reply-form {
+            border-top: 1px solid #edf0f5;
+            padding-top: 20px;
+        }
+
+        .reply-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #344054;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 13px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+        }
+
+        .reply-form textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .reply-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .reply-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .empty-state {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 60px 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h2 {
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #667085;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 700px) {
+            .messages-page {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .page-header {
+                padding: 25px;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .message-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/mentor_dashboard">Dashboard</a>
+            <a href="/mentor_messages">Student Messages</a>
+            <a href="/mentor_logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Main -->
+
+    <main class="messages-page">
+
+        <!-- Header -->
+
+        <section class="page-header">
+
+            <h1>
+                💬 Student Messages
+            </h1>
+
+            <p>
+                View student questions and provide personalized guidance.
+            </p>
+
+        </section>
+
+
+        <!-- Messages -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message-card">
+
+                    <div class="student-info">
+
+                        <div class="student-avatar">
+
+                            {% if message[3] %}
+                                {{ message[3][0]|upper }}
+                            {% else %}
+                                S
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                {{ message[3] }}
+                            </h3>
+
+                            <p>
+                                Student
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Student Message -->
+
+                    <div class="message-box">
+
+                        <p>
+                            {{ message[1] }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- Message Time -->
+
+                    <div class="message-time">
+
+                        {{ message[2] }}
+
+                    </div>
+
+
+                    <!-- Reply Form -->
+
+                    <div class="reply-form">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('mentor_reply', student_id=message[4]) }}"
+                        >
+
+                            <label for="reply-{{ message[4] }}">
+                                ✍️ Your Reply
+                            </label>
+
+                            <textarea
+                                id="reply-{{ message[4] }}"
+                                name="message"
+                                placeholder="Type your guidance or reply to the student..."
+                                required
+                            ></textarea>
+
+                            <button
+                                type="submit"
+                                class="reply-btn"
+                            >
+                                📤 Send Reply
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+
+        {% else %}
+
+            <!-- Empty State -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    💬
+                </div>
+
+                <h2>
+                    No Student Messages Yet
+                </h2>
+
+                <p>
+                    When students send you messages, they will appear here.
+                </p>
+
+                <a
+                    href="/mentor_dashboard"
+                    class="back-btn"
+                >
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

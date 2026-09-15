@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mentor Login | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .login-page {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-info {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-info h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .login-info p {
+            color: #ede9fe;
+            line-height: 1.7;
+        }
+
+        .login-info ul {
+            padding-left: 20px;
+            color: #ede9fe;
+            line-height: 2;
+            margin-top: 20px;
+        }
+
+        .login-form {
+            padding: 45px;
+        }
+
+        .login-form h2 {
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #667085;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #344054;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 20px;
+            color: #7c3aed;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #6d28d9;
+        }
+
+        .form-links {
+            text-align: center;
+            margin-top: 22px;
+            color: #667085;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .form-links a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-links a:hover {
+            text-decoration: underline;
+        }
+
+        .flash-message {
+            padding: 12px 15px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+            background: #fef3f2;
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        @media (max-width: 750px) {
+            .login-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .login-info {
+                padding: 30px;
+            }
+
+            .login-form {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/login">Student Login</a>
+            <a href="/mentor_signup">Become a Mentor</a>
+        </div>
+
+    </nav>
+
+
+    <main class="login-page">
+
+        <div class="login-wrapper">
+
+            <!-- Mentor Information -->
+
+            <section class="login-info">
+
+                <h1>
+                    Welcome, Mentor 👋
+                </h1>
+
+                <p>
+                    Share your knowledge, guide students and
+                    help them build the skills they need for
+                    their future.
+                </p>
+
+                <ul>
+                    <li>Connect with students</li>
+                    <li>Answer student questions</li>
+                    <li>Share your expertise</li>
+                    <li>Guide learning journeys</li>
+                </ul>
+
+            </section>
+
+
+            <!-- Login Form -->
+
+            <section class="login-form">
+
+                <h2>
+                    Mentor Login
+                </h2>
+
+                <p class="login-subtitle">
+                    Sign in to access your mentor dashboard.
+                </p>
+
+
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="flash-message">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <form method="POST" action="/mentor_login">
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            📧 Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your mentor email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            🔒 Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <a
+                        href="/mentor_forgot_password"
+                        class="forgot-link"
+                    >
+                        Forgot Password?
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="login-btn"
+                    >
+                        Login
+                    </button>
+
+                </form>
+
+
+                <div class="form-links">
+
+                    <div>
+                        Don't have a mentor account?
+                        <a href="/mentor_signup">
+                            Become a Mentor
+                        </a>
+                    </div>
+
+                    <div>
+                        Are you a student?
+                        <a href="/login">
+                            Student Login
+                        </a>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

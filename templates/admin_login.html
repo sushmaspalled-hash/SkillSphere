@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login - SkillSphere</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .login-box {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background: #f9f9f9;
+        }
+
+        .login-box input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .admin-btn {
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .admin-btn:hover {
+            opacity: 0.9;
+        }
+
+        .info {
+            background: #eeeeee;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="login-box">
+
+        <h1>🔐 Admin Login</h1>
+
+        <p>
+            Login to manage the SkillSphere platform.
+        </p>
+
+        <div class="info">
+            <strong>Demo Admin Account</strong>
+            <br><br>
+            Email: admin@skillsphere.com
+            <br>
+            Password: admin123
+        </div>
+
+        <form action="/admin_login" method="POST">
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Admin Email"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Admin Password"
+                required
+            >
+
+            <br>
+
+            <button
+                type="submit"
+                class="admin-btn">
+                🔑 Login as Admin
+            </button>
+
+        </form>
+
+        <br><br>
+
+        <a href="/login">
+            <button type="button">
+                Student Login
+            </button>
+        </a>
+
+        <br><br>
+
+        <a href="/mentor_login">
+            <button type="button">
+                Mentor Login
+            </button>
+        </a>
+
+        <br><br>
+
+        <a href="/">
+            <button type="button">
+                ← Back to Home
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

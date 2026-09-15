@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Signup | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+        }
+
+        .signup-page {
+            min-height: calc(100vh - 73px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .signup-wrapper {
+            width: 100%;
+            max-width: 950px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Left panel */
+
+        .signup-info {
+            padding: 55px 45px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .signup-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .signup-info h1 {
+            color: white;
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .signup-info p {
+            color: #dbeafe;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 13px 0;
+            color: white;
+            font-weight: 500;
+        }
+
+        .benefit-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Form panel */
+
+        .signup-form-section {
+            padding: 45px;
+        }
+
+        .signup-form-section h2 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .signup-subtitle {
+            margin-bottom: 22px;
+        }
+
+        .signup-form {
+            margin-top: 0;
+        }
+
+        .signup-form label {
+            margin-top: 12px;
+        }
+
+        .signup-form button {
+            width: 100%;
+            margin-top: 23px;
+            padding: 13px;
+            font-size: 16px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .mentor-signup {
+            margin-top: 22px;
+            padding: 13px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .mentor-signup a {
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .flash-message {
+            padding: 11px 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            font-size: 14px;
+        }
+
+        @media (max-width: 750px) {
+            .signup-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .signup-info {
+                padding: 35px 30px;
+            }
+
+            .signup-info h1 {
+                font-size: 30px;
+            }
+
+            .signup-form-section {
+                padding: 35px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Signup Page -->
+    <main class="signup-page">
+
+        <div class="signup-wrapper">
+
+            <!-- Information -->
+            <section class="signup-info">
+
+                <div class="signup-icon">
+                    🚀
+                </div>
+
+                <h1>
+                    Start Your SkillSphere Journey
+                </h1>
+
+                <p>
+                    Create your student account and start learning,
+                    connecting with mentors, and building your future.
+                </p>
+
+                <div class="benefit">
+                    <span class="benefit-icon">📚</span>
+                    <span>Explore useful courses</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">👨‍🏫</span>
+                    <span>Find suitable mentors</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">🎯</span>
+                    <span>Discover recommended skills</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">📊</span>
+                    <span>Track your learning progress</span>
+                </div>
+
+            </section>
+
+
+            <!-- Signup Form -->
+            <section class="signup-form-section">
+
+                <h2>Create Account</h2>
+
+                <p class="signup-subtitle">
+                    Join SkillSphere as a student.
+                </p>
+
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="flash-message">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <form method="POST" action="/signup" class="signup-form">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+
+                    <button type="submit">
+                        🚀 Create Account
+                    </button>
+
+                </form>
+
+
+                <div class="login-link">
+
+                    <span>Already have an account?</span>
+
+                    <a href="/login">
+                        Login
+                    </a>
+
+                </div>
+
+
+                <div class="mentor-signup">
+
+                    👨‍🏫 Want to become a mentor?
+
+                    <a href="/mentor_signup">
+                        Mentor Signup
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

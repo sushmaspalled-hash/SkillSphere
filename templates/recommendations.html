@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recommendations | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            padding: 42px 7%;
+            color: white;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+            font-size: 16px;
+        }
+
+        .recommendations-container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .intro-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 27px;
+            margin-bottom: 28px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .intro-card h2 {
+            margin-bottom: 8px;
+            color: #172033;
+        }
+
+        .intro-card p {
+            color: #667085;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            margin: 35px 0 18px;
+            color: #172033;
+            font-size: 24px;
+        }
+
+        .skills-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .skill-tag {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #2563eb;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .recommendation-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-card h3 {
+            color: #172033;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-card p {
+            color: #667085;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-tag {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 6px 11px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 17px;
+        }
+
+        .mentor-specialization {
+            color: #475467;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .mentor-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 18px;
+        }
+
+        .mentor-skill {
+            background: #f2f4f7;
+            color: #344054;
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .course-card {
+            border-left-color: #16a34a;
+        }
+
+        .course-icon {
+            background: #ecfdf3;
+        }
+
+        .course-tag {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .empty-state {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 55px 25px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h2 {
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 35px;
+            padding-bottom: 40px;
+        }
+
+        .navigation .btn {
+            width: auto;
+        }
+
+        @media (max-width: 700px) {
+
+            .recommendations-container {
+                width: 94%;
+            }
+
+            .page-header {
+                padding: 35px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/skills">My Skills</a>
+            <a href="/courses">Courses</a>
+            <a href="/mentors">Mentors</a>
+            <a href="/recommendations">Recommendations</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Header -->
+
+    <section class="page-header">
+
+        <h1>
+            🎯 Personalized Recommendations
+        </h1>
+
+        <p>
+            Discover courses and mentors based on the skills in your profile.
+        </p>
+
+    </section>
+
+
+    <!-- Main -->
+
+    <main class="recommendations-container">
+
+        <!-- Introduction -->
+
+        <section class="intro-card">
+
+            <h2>
+                ✨ Recommended For You
+            </h2>
+
+            <p>
+                SkillSphere analyzes the skills in your profile and suggests
+                relevant learning opportunities and mentors.
+            </p>
+
+            {% if user_skills %}
+
+                <div class="skills-summary">
+
+                    {% for skill in user_skills %}
+
+                        <span class="skill-tag">
+                            💡 {{ skill[1] }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Recommended Courses -->
+
+        {% if recommended_courses %}
+
+            <h2 class="section-title">
+                📚 Recommended Courses
+            </h2>
+
+            <div class="recommendations-grid">
+
+                {% for course in recommended_courses %}
+
+                    <div class="recommendation-card course-card">
+
+                        <div class="recommendation-icon course-icon">
+                            📚
+                        </div>
+
+                        <h3>
+                            {{ course }}
+                        </h3>
+
+                        <p>
+                            This course matches your skills and can help you
+                            improve your knowledge and build stronger technical
+                            skills.
+                        </p>
+
+                        <span class="recommendation-tag course-tag">
+                            ✨ Recommended Course
+                        </span>
+
+                        <br>
+
+                        <a
+                            href="{{ url_for('course', course_name=course) }}"
+                            class="btn"
+                        >
+                            🚀 Start Course
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Recommended Mentors -->
+
+        {% if recommended_mentors %}
+
+            <h2 class="section-title">
+                👨‍🏫 Recommended Mentors
+            </h2>
+
+            <div class="recommendations-grid">
+
+                {% for mentor in recommended_mentors %}
+
+                    <div class="recommendation-card">
+
+                        <div class="recommendation-icon">
+                            👨‍🏫
+                        </div>
+
+                        <h3>
+                            {{ mentor[1] }}
+                        </h3>
+
+                        <div class="mentor-specialization">
+                            🎓 {{ mentor[2] }}
+                        </div>
+
+                        <div class="mentor-skills">
+
+                            {% for skill in mentor[3].split(',') %}
+
+                                <span class="mentor-skill">
+                                    {{ skill.strip() }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                        <span class="recommendation-tag">
+                            ✨ Recommended Mentor
+                        </span>
+
+                        <br>
+
+                        <a
+                            href="{{ url_for('message_mentor', mentor_id=mentor[0]) }}"
+                            class="btn"
+                        >
+                            💬 Message Mentor
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- No Recommendations -->
+
+        {% if not recommended_courses and not recommended_mentors %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🎯
+                </div>
+
+                <h2>
+                    No Recommendations Yet
+                </h2>
+
+                <p>
+                    Add skills to your profile so SkillSphere can suggest
+                    relevant courses and mentors for you.
+                </p>
+
+                <br>
+
+                <a href="/skills" class="btn">
+                    🧠 Add My Skills
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Navigation -->
+
+        <div class="navigation">
+
+            <a href="/dashboard" class="btn">
+                ← Dashboard
+            </a>
+
+            <a href="/skills" class="btn">
+                🧠 My Skills
+            </a>
+
+            <a href="/courses" class="btn">
+                📚 Courses
+            </a>
+
+            <a href="/mentors" class="btn">
+                👨‍🏫 Find Mentors
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mentor Signup | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+        }
+
+        .mentor-signup-page {
+            min-height: calc(100vh - 73px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .mentor-signup-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Left panel */
+
+        .mentor-info {
+            padding: 55px 45px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mentor-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .mentor-info h1 {
+            color: white;
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .mentor-info p {
+            color: #dbeafe;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 13px 0;
+            color: white;
+            font-weight: 500;
+        }
+
+        .benefit-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Form */
+
+        .mentor-form-section {
+            padding: 45px;
+        }
+
+        .mentor-form-section h2 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .form-subtitle {
+            margin-bottom: 20px;
+        }
+
+        .mentor-form {
+            margin-top: 0;
+        }
+
+        .mentor-form label {
+            margin-top: 10px;
+        }
+
+        .mentor-form button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            font-size: 16px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .student-login {
+            margin-top: 22px;
+            padding: 13px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .student-login a {
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .flash-message {
+            padding: 11px 14px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            font-size: 14px;
+        }
+
+        @media (max-width: 750px) {
+
+            .mentor-signup-wrapper {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+            }
+
+            .mentor-info {
+                padding: 35px 30px;
+            }
+
+            .mentor-info h1 {
+                font-size: 30px;
+            }
+
+            .mentor-form-section {
+                padding: 35px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/">Home</a>
+            <a href="/mentor_login">Mentor Login</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Mentor Signup -->
+
+    <main class="mentor-signup-page">
+
+        <div class="mentor-signup-wrapper">
+
+
+            <!-- Information Panel -->
+
+            <section class="mentor-info">
+
+                <div class="mentor-icon">
+                    👨‍🏫
+                </div>
+
+                <h1>
+                    Share Your Knowledge
+                </h1>
+
+                <p>
+                    Become a SkillSphere mentor and help students develop
+                    the skills they need for their future.
+                </p>
+
+                <div class="benefit">
+                    <span class="benefit-icon">🎓</span>
+                    <span>Guide students in their learning journey</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">💡</span>
+                    <span>Share your knowledge and experience</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">💬</span>
+                    <span>Communicate directly with students</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">🌱</span>
+                    <span>Help students grow their skills</span>
+                </div>
+
+            </section>
+
+
+            <!-- Form -->
+
+            <section class="mentor-form-section">
+
+                <h2>
+                    Mentor Signup
+                </h2>
+
+                <p class="form-subtitle">
+                    Create your mentor account.
+                </p>
+
+
+                <!-- Flash Messages -->
+
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                        {% for message in messages %}
+
+                            <div class="flash-message">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <form
+                    method="POST"
+                    action="/mentor_signup"
+                    class="mentor-form"
+                >
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+
+                    <label for="specialization">
+                        Specialization
+                    </label>
+
+                    <input
+                        type="text"
+                        id="specialization"
+                        name="specialization"
+                        placeholder="Example: Data Science"
+                        required
+                    >
+
+
+                    <label for="skills">
+                        Skills
+                    </label>
+
+                    <input
+                        type="text"
+                        id="skills"
+                        name="skills"
+                        placeholder="Example: Python, SQL, Machine Learning"
+                        required
+                    >
+
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+
+                    <button type="submit">
+                        👨‍🏫 Create Mentor Account
+                    </button>
+
+                </form>
+
+
+                <div class="login-link">
+
+                    <span>Already a mentor?</span>
+
+                    <a href="/mentor_login">
+                        Mentor Login
+                    </a>
+
+                </div>
+
+
+                <div class="student-login">
+
+                    🎓 Looking to learn?
+
+                    <a href="/signup">
+                        Student Signup
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

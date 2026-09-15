@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ course_name }} | SkillSphere</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 45px 7%;
+        }
+
+        .course-header h1 {
+            color: white;
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .course-header p {
+            color: #dbeafe;
+        }
+
+        .course-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 35px auto;
+        }
+
+        .progress-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+
+        .progress-top h2 {
+            margin: 0;
+        }
+
+        .progress-percentage {
+            font-size: 25px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 14px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .topics-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .topics-card h2 {
+            margin-bottom: 5px;
+        }
+
+        .topics-description {
+            margin-bottom: 22px;
+        }
+
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 17px;
+            border: 1px solid #e5e7eb;
+            border-radius: 11px;
+            background: #f8fafc;
+        }
+
+        .topic-item.completed {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .topic-number {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .topic-item.completed .topic-number {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .topic-name {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .topic-status {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .topic-item.completed .topic-status {
+            color: #15803d;
+        }
+
+        .incomplete-status {
+            color: #6b7280;
+        }
+
+        .topic-form {
+            margin: 0;
+        }
+
+        .topic-form button {
+            width: auto;
+            padding: 9px 13px;
+            font-size: 13px;
+        }
+
+        .completed-btn {
+            background: #16a34a;
+        }
+
+        .completed-btn:hover {
+            background: #15803d;
+        }
+
+        .complete-section {
+            margin-top: 25px;
+            padding: 22px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 13px;
+            text-align: center;
+        }
+
+        .complete-section h3 {
+            margin-bottom: 5px;
+        }
+
+        .complete-section p {
+            margin-bottom: 15px;
+        }
+
+        .navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+            padding-bottom: 40px;
+        }
+
+        .navigation .btn {
+            width: auto;
+        }
+
+        .empty-topics {
+            text-align: center;
+            padding: 35px 10px;
+        }
+
+        .empty-topics-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 650px) {
+
+            .course-container {
+                width: 94%;
+            }
+
+            .course-header {
+                padding: 35px 5%;
+            }
+
+            .course-header h1 {
+                font-size: 29px;
+            }
+
+            .progress-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topic-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topic-form {
+                width: 100%;
+            }
+
+            .topic-form button {
+                width: 100%;
+            }
+
+            .navigation .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/courses">Courses</a>
+            <a href="/skills">My Skills</a>
+            <a href="/mentors">Mentors</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Course Header -->
+
+    <section class="course-header">
+
+        <h1>
+            📚 {{ course_name }}
+        </h1>
+
+        <p>
+            Learn step by step and track your progress.
+        </p>
+
+    </section>
+
+
+    <!-- Main Content -->
+
+    <main class="course-container">
+
+        <!-- Progress -->
+
+        <section class="progress-card">
+
+            <div class="progress-top">
+
+                <h2>
+                    📈 Your Progress
+                </h2>
+
+                <span class="progress-percentage">
+                    {{ progress }}%
+                </span>
+
+            </div>
+
+            <div class="progress-bar-container">
+
+                <div
+                    class="progress-bar"
+                    data-progress="{{ progress }}"
+                ></div>
+
+            </div>
+
+            <p style="margin-top: 10px;">
+                Keep going! Complete the topics below to improve your progress.
+            </p>
+
+        </section>
+
+
+        <!-- Topics -->
+
+        <section class="topics-card">
+
+            <h2>
+                📝 Course Topics
+            </h2>
+
+            <p class="topics-description">
+                Complete each topic as you learn.
+            </p>
+
+
+            {% if topics %}
+
+                <div class="topic-list">
+
+                    {% for topic in topics %}
+
+                        <div
+                            class="topic-item {% if topic.completed %}completed{% endif %}"
+                        >
+
+                            <div class="topic-info">
+
+                                <div class="topic-number">
+
+                                    {% if topic.completed %}
+                                        ✓
+                                    {% else %}
+                                        {{ loop.index }}
+                                    {% endif %}
+
+                                </div>
+
+                                <div>
+
+                                    <div class="topic-name">
+                                        {{ topic.name }}
+                                    </div>
+
+                                    {% if topic.completed %}
+
+                                        <div class="topic-status">
+                                            ✓ Completed
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="topic-status incomplete-status">
+                                            Not completed
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <form
+                                method="POST"
+                                action="/save_topic"
+                                class="topic-form"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="course_name"
+                                    value="{{ course_name }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="topic_name"
+                                    value="{{ topic.name }}"
+                                >
+
+                                {% if topic.completed %}
+
+                                    <input
+                                        type="hidden"
+                                        name="completed"
+                                        value="0"
+                                    >
+
+                                    <button type="submit">
+                                        ↩ Mark Incomplete
+                                    </button>
+
+                                {% else %}
+
+                                    <input
+                                        type="hidden"
+                                        name="completed"
+                                        value="1"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="completed-btn"
+                                    >
+                                        ✓ Complete
+                                    </button>
+
+                                {% endif %}
+
+                            </form>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- Complete Course -->
+
+                <div class="complete-section">
+
+                    <h3>
+                        🎉 Finished all the topics?
+                    </h3>
+
+                    <p>
+                        Mark this course as completed when you are done.
+                    </p>
+
+                    <form
+                        method="POST"
+                        action="/complete_course/{{ course_name }}"
+                    >
+
+                        <button type="submit">
+                            🏆 Complete Course
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-topics">
+
+                    <div class="empty-topics-icon">
+                        📖
+                    </div>
+
+                    <h3>
+                        No topics available
+                    </h3>
+
+                    <p>
+                        Course content will be available soon.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- Navigation -->
+
+        <div class="navigation">
+
+            <a href="/courses" class="btn">
+                ← All Courses
+            </a>
+
+            <a href="/dashboard" class="btn">
+                🏠 Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- Set Progress Bar Width -->
+
+    <script>
+        const progressBar = document.querySelector(".progress-bar");
+
+        if (progressBar) {
+            progressBar.style.width =
+                progressBar.dataset.progress + "%";
+        }
+    </script>
+
+</body>
+</html>
