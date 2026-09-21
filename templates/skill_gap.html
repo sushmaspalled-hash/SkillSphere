@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Skill Gap Analyzer | SkillSphere</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        .skill-gap-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .skill-gap-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .skill-gap-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .skill-gap-header p {
+            color: #666;
+            font-size: 17px;
+        }
+
+        .analyzer-card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #6c63ff;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .analyze-btn:hover {
+            opacity: 0.9;
+        }
+
+        .info-box {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #f5f4ff;
+        }
+
+        .result-section {
+            margin-top: 30px;
+        }
+
+        .result-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .result-card h2 {
+            margin-top: 0;
+        }
+
+        .percentage-box {
+            text-align: center;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            background: #f5f4ff;
+        }
+
+        .percentage {
+            font-size: 48px;
+            font-weight: bold;
+            color: #6c63ff;
+        }
+
+        .skill-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .skill-box {
+            padding: 22px;
+            border-radius: 15px;
+        }
+
+        .matched-box {
+            background: #eaf8ef;
+        }
+
+        .missing-box {
+            background: #fff1f1;
+        }
+
+        .skill-box h3 {
+            margin-top: 0;
+        }
+
+        .skill-list {
+            padding-left: 20px;
+        }
+
+        .skill-list li {
+            margin-bottom: 8px;
+        }
+
+        .course-section {
+            margin-top: 30px;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .course-card {
+            background: #f8f7ff;
+            border: 1px solid #e5e2ff;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .course-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .course-card p {
+            color: #666;
+        }
+
+        .course-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: #6c63ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .course-btn:hover {
+            opacity: 0.9;
+        }
+
+        .empty-message {
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+
+            .skill-columns,
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-gap-header h1 {
+                font-size: 28px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="skill-gap-container">
+
+    <div class="skill-gap-header">
+
+        <h1>🎯 Skill Gap Analyzer</h1>
+
+        <p>
+            Discover which skills you need to develop for your target career.
+        </p>
+
+    </div>
+
+
+    <div class="analyzer-card">
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="target_role">
+                    Select Your Target Career
+                </label>
+
+                <select name="target_role"
+                        id="target_role"
+                        required>
+
+                    <option value="">
+                        -- Select a Career --
+                    </option>
+
+                    <option value="Data Scientist"
+                        {% if target_role == "Data Scientist" %}selected{% endif %}>
+                        Data Scientist
+                    </option>
+
+                    <option value="Data Analyst"
+                        {% if target_role == "Data Analyst" %}selected{% endif %}>
+                        Data Analyst
+                    </option>
+
+                    <option value="Machine Learning Engineer"
+                        {% if target_role == "Machine Learning Engineer" %}selected{% endif %}>
+                        Machine Learning Engineer
+                    </option>
+
+                    <option value="Python Developer"
+                        {% if target_role == "Python Developer" %}selected{% endif %}>
+                        Python Developer
+                    </option>
+
+                    <option value="Web Developer"
+                        {% if target_role == "Web Developer" %}selected{% endif %}>
+                        Web Developer
+                    </option>
+
+                    <option value="AI Engineer"
+                        {% if target_role == "AI Engineer" %}selected{% endif %}>
+                        AI Engineer
+                    </option>
+
+                    <option value="Business Analyst"
+                        {% if target_role == "Business Analyst" %}selected{% endif %}>
+                        Business Analyst
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="additional_skills">
+                    Additional Skills
+                </label>
+
+                <input
+                    type="text"
+                    name="additional_skills"
+                    id="additional_skills"
+                    value="{{ additional_skills }}"
+                    placeholder="Example: Python, SQL, Pandas"
+                >
+
+            </div>
+
+
+            <button type="submit" class="analyze-btn">
+                🔍 Analyze My Skill Gap
+            </button>
+
+        </form>
+
+
+        <div class="info-box">
+
+            <h3>💡 How it works</h3>
+
+            <p>
+                SkillSphere compares your current skills with the skills
+                required for your selected career and identifies the skills
+                you already have and the skills you should learn.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if result %}
+
+    <div class="result-section">
+
+        <div class="result-card">
+
+            <h2>
+                📊 Your Skill Gap Analysis
+            </h2>
+
+            <p>
+                Target Career:
+                <strong>{{ target_role }}</strong>
+            </p>
+
+
+            <div class="percentage-box">
+
+                <div class="percentage">
+                    {{ result.match_percentage }}%
+                </div>
+
+                <p>
+                    Current Skill Match
+                </p>
+
+            </div>
+
+
+            <div class="skill-columns">
+
+                <div class="skill-box matched-box">
+
+                    <h3>✅ Skills You Have</h3>
+
+                    {% if result.matched_skills %}
+
+                    <ul class="skill-list">
+
+                        {% for skill in result.matched_skills %}
+
+                        <li>{{ skill }}</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+
+                    <p class="empty-message">
+                        No matching skills found yet.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="skill-box missing-box">
+
+                    <h3>📚 Skills You Need</h3>
+
+                    {% if result.missing_skills %}
+
+                    <ul class="skill-list">
+
+                        {% for skill in result.missing_skills %}
+
+                        <li>{{ skill }}</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                    {% else %}
+
+                    <p class="empty-message">
+                        🎉 You have all the required skills!
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>🚀 Recommended Next Step</h3>
+
+                {% if result.missing_skills %}
+
+                <p>
+                    Focus on learning:
+                    <strong>
+                        {{ result.missing_skills | join(", ") }}
+                    </strong>
+                </p>
+
+                {% else %}
+
+                <p>
+                    Keep improving your existing skills and build projects
+                    to strengthen your career profile.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if recommended_courses %}
+
+            <div class="course-section">
+
+                <h2>🎓 Recommended Courses</h2>
+
+                <p>
+                    Based on your skill gap, SkillSphere recommends these
+                    courses for your learning path:
+                </p>
+
+
+                <div class="course-grid">
+
+                    {% for course in recommended_courses %}
+
+                    <div class="course-card">
+
+                        <h3>
+                            📘 {{ course }}
+                        </h3>
+
+                        <p>
+                            Learn this skill and strengthen your profile
+                            for your target career.
+                        </p>
+
+                        <a
+                            href="{{ url_for('course', course_name=course) }}"
+                            class="course-btn">
+
+                            Start Course →
+
+                        </a>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

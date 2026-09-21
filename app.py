@@ -963,6 +963,165 @@ def recommendations():
 
 
 # =========================================================
+# AI SKILL GAP ANALYZER
+# =========================================================
+
+@app.route("/skill_gap", methods=["GET", "POST"])
+def skill_gap():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "student":
+        return redirect("/dashboard")
+
+    career_skills = {
+        "Data Scientist": ["Python", "SQL", "Pandas", "NumPy", "Matplotlib", "Machine Learning", "Statistics"],
+        "Data Analyst": ["Python", "SQL", "Excel", "Pandas", "Power BI", "Statistics", "Data Visualization"],
+        "Machine Learning Engineer": ["Python", "SQL", "NumPy", "Pandas", "Machine Learning", "Deep Learning", "TensorFlow"],
+        "Python Developer": ["Python", "OOP", "SQL", "Git", "Flask", "APIs", "Testing"],
+        "Web Developer": ["HTML", "CSS", "JavaScript", "Git", "Flask", "APIs", "SQL"],
+        "AI Engineer": ["Python", "SQL", "Machine Learning", "Deep Learning", "TensorFlow", "NLP", "APIs"],
+        "Business Analyst": ["Excel", "SQL", "Power BI", "Statistics", "Data Visualization", "Business Analysis"]
+    }
+
+    result = None
+    target_role = ""
+    additional_skills = ""
+    recommended_courses = []
+
+    # Course recommendations are mapped to the skills they help develop.
+    # This keeps recommendations relevant to the student's identified skill gap.
+    course_catalog = {
+        "Python Programming": [
+            "python", "oop", "flask", "apis", "testing"
+        ],
+        "SQL for Data Analysis": [
+            "sql"
+        ],
+        "Excel for Data Analytics": [
+            "excel"
+        ],
+        "Pandas & NumPy for Data Science": [
+            "pandas", "numpy"
+        ],
+        "Power BI Fundamentals": [
+            "power bi"
+        ],
+        "Statistics for Data Science": [
+            "statistics"
+        ],
+        "Data Visualization": [
+            "data visualization", "matplotlib"
+        ],
+        "Machine Learning": [
+            "machine learning"
+        ],
+        "Deep Learning with TensorFlow": [
+            "deep learning", "tensorflow"
+        ],
+        "Natural Language Processing": [
+            "nlp"
+        ],
+        "Web Development": [
+            "html", "css", "javascript"
+        ],
+        "Git & Version Control": [
+            "git"
+        ],
+        "API Development": [
+            "apis"
+        ],
+        "Business Analysis": [
+            "business analysis"
+        ]
+    }
+
+    conn = sqlite3.connect("users.db")
+    cur = conn.cursor()
+    cur.execute("SELECT skill_name FROM skills")
+    skill_rows = cur.fetchall()
+    conn.close()
+
+    current_skills = [row[0].strip() for row in skill_rows if row[0].strip()]
+
+    if request.method == "POST":
+        target_role = request.form.get("target_role", "").strip()
+        additional_skills = request.form.get("additional_skills", "").strip()
+
+        if additional_skills:
+            extra_skills = [
+                s.strip()
+                for s in additional_skills.split(",")
+                if s.strip()
+            ]
+
+            existing_lower = {
+                existing.lower().strip()
+                for existing in current_skills
+            }
+
+            for skill in extra_skills:
+                if skill.lower() not in existing_lower:
+                    current_skills.append(skill)
+                    existing_lower.add(skill.lower())
+
+        required_skills = career_skills.get(target_role, [])
+
+        current_lower = {
+            skill.lower().strip()
+            for skill in current_skills
+        }
+
+        matched_skills = [
+            skill
+            for skill in required_skills
+            if skill.lower() in current_lower
+        ]
+
+        missing_skills = [
+            skill
+            for skill in required_skills
+            if skill.lower() not in current_lower
+        ]
+
+        match_percentage = (
+            round((len(matched_skills) / len(required_skills)) * 100)
+            if required_skills else 0
+        )
+
+        # Recommend courses that teach one or more missing skills.
+        for course_name, course_skills in course_catalog.items():
+            teaches_missing_skill = any(
+                missing_skill.lower() in course_skills
+                for missing_skill in missing_skills
+            )
+
+            if teaches_missing_skill:
+                recommended_courses.append(course_name)
+
+        # Limit the list so the result remains easy to understand.
+        recommended_courses = recommended_courses[:6]
+
+        result = {
+            "required_skills": required_skills,
+            "matched_skills": matched_skills,
+            "missing_skills": missing_skills,
+            "match_percentage": match_percentage,
+            "recommended_courses": recommended_courses
+        }
+
+    return render_template(
+        "skill_gap.html",
+        result=result,
+        target_role=target_role,
+        current_skills=current_skills,
+        additional_skills=additional_skills,
+        recommended_courses=recommended_courses
+    )
+
+
+# =========================================================
 # STUDENT FORGOT PASSWORD
 # =========================================================
 
