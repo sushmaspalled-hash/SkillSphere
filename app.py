@@ -1,9 +1,15 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import sqlite3
-from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "skillsphere_secret_key"
+app.secret_key = os.getenv("SECRET_KEY")
+
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY is missing. Please create a .env file with SECRET_KEY=your-secret-key")
 
 
 # =========================================================
@@ -35,24 +41,9 @@ def init_db():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS skills (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            skill_name TEXT NOT NULL,
-            user_id INTEGER
+            skill_name TEXT NOT NULL
         )
     """)
-
-    # -----------------------------------------------------
-    # SKILLS DATABASE MIGRATION
-    # Add user_id to older skills tables
-    # -----------------------------------------------------
-
-    cur.execute("PRAGMA table_info(skills)")
-    skill_columns = [column[1] for column in cur.fetchall()]
-
-    if "user_id" not in skill_columns:
-        cur.execute("""
-            ALTER TABLE skills
-            ADD COLUMN user_id INTEGER
-        """)
 
     # -----------------------------------------------------
     # MENTORS
@@ -167,7 +158,6 @@ def signup():
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
-        password_hash = generate_password_hash(password)
 
         conn = sqlite3.connect("users.db")
         cur = conn.cursor()
@@ -181,7 +171,7 @@ def signup():
             """, (
                 name,
                 email,
-                password_hash
+                password
             ))
 
             conn.commit()
@@ -217,31 +207,17 @@ def login():
             SELECT *
             FROM users
             WHERE email = ?
-        """, (email,))
+            AND password = ?
+        """, (
+            email,
+            password
+        ))
 
         user = cur.fetchone()
-        valid_password = False
-
-        if user:
-            stored_password = user[3]
-
-            try:
-                valid_password = check_password_hash(stored_password, password)
-            except (ValueError, TypeError):
-                valid_password = stored_password == password
-
-            if not valid_password and stored_password == password:
-                valid_password = True
-                cur.execute("""
-                    UPDATE users
-                    SET password = ?
-                    WHERE id = ?
-                """, (generate_password_hash(password), user[0]))
-                conn.commit()
 
         conn.close()
 
-        if user and valid_password:
+        if user:
 
             session.clear()
 
@@ -288,7 +264,7 @@ def skills():
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM skills WHERE user_id = ?", (session["user_id"],))
+    cur.execute("SELECT * FROM skills")
 
     skills_list = cur.fetchall()
 
@@ -313,9 +289,9 @@ def add_skill():
 
     cur.execute("""
         INSERT INTO skills
-        (skill_name, user_id)
-        VALUES (?, ?)
-    """, (skill_name, session["user_id"]))
+        (skill_name)
+        VALUES (?)
+    """, (skill_name,))
 
     conn.commit()
     conn.close()
@@ -335,8 +311,7 @@ def delete_skill(skill_id):
     cur.execute("""
         DELETE FROM skills
         WHERE id = ?
-        AND user_id = ?
-    """, (skill_id, session["user_id"]))
+    """, (skill_id,))
 
     conn.commit()
     conn.close()
@@ -493,7 +468,6 @@ def message_mentor(mentor_id):
 
     cur.execute("""
         SELECT
-            messages.id,
             messages.message_text,
             messages.sent_at,
             messages.sender_type,
@@ -502,9 +476,8 @@ def message_mentor(mentor_id):
         LEFT JOIN users
         ON messages.sender_user_id = users.id
         WHERE messages.mentor_id = ?
-        AND messages.sender_user_id = ?
         ORDER BY messages.id ASC
-    """, (mentor_id, session["user_id"]))
+    """, (mentor_id,))
 
     message_list = cur.fetchall()
 
@@ -531,7 +504,6 @@ def mentor_signup():
         skills = request.form["skills"]
         email = request.form["email"]
         password = request.form["password"]
-        password_hash = generate_password_hash(password)
 
         conn = sqlite3.connect("users.db")
         cur = conn.cursor()
@@ -557,7 +529,7 @@ def mentor_signup():
             """, (
                 mentor_id,
                 email,
-                password_hash
+                password
             ))
 
             conn.commit()
@@ -593,37 +565,22 @@ def mentor_login():
         cur.execute("""
             SELECT
                 mentor_accounts.mentor_id,
-                mentors.name,
-                mentor_accounts.password
+                mentors.name
             FROM mentor_accounts
             JOIN mentors
             ON mentor_accounts.mentor_id = mentors.id
             WHERE mentor_accounts.email = ?
-        """, (email,))
+            AND mentor_accounts.password = ?
+        """, (
+            email,
+            password
+        ))
 
         mentor = cur.fetchone()
-        valid_password = False
-
-        if mentor:
-            stored_password = mentor[2]
-
-            try:
-                valid_password = check_password_hash(stored_password, password)
-            except (ValueError, TypeError):
-                valid_password = stored_password == password
-
-            if not valid_password and stored_password == password:
-                valid_password = True
-                cur.execute("""
-                    UPDATE mentor_accounts
-                    SET password = ?
-                    WHERE mentor_id = ?
-                """, (generate_password_hash(password), mentor[0]))
-                conn.commit()
 
         conn.close()
 
-        if mentor and valid_password:
+        if mentor:
 
             session.clear()
 
@@ -933,11 +890,7 @@ def recommendations():
     conn = sqlite3.connect("users.db")
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT *
-        FROM skills
-        WHERE user_id = ?
-    """, (session["user_id"],))
+    cur.execute("SELECT * FROM skills")
     user_skills = cur.fetchall()
 
     cur.execute("SELECT * FROM mentors")
@@ -1072,7 +1025,7 @@ def reset_password():
             UPDATE users
             SET password = ?
             WHERE id = ?
-        """, (generate_password_hash(new_password), session["reset_user_id"]))
+        """, (new_password, session["reset_user_id"]))
 
         conn.commit()
         conn.close()
@@ -1084,83 +1037,6 @@ def reset_password():
         return redirect("/login")
 
     return render_template("reset_password.html")
-
-
-# =========================================================
-# MENTOR FORGOT PASSWORD
-# =========================================================
-
-@app.route("/mentor_forgot_password", methods=["GET", "POST"])
-def mentor_forgot_password():
-
-    if request.method == "POST":
-
-        email = request.form["email"].strip()
-
-        conn = sqlite3.connect("users.db")
-        cur = conn.cursor()
-
-        cur.execute("""
-            SELECT mentor_id
-            FROM mentor_accounts
-            WHERE email = ?
-        """, (email,))
-
-        mentor = cur.fetchone()
-        conn.close()
-
-        if mentor:
-            session["reset_mentor_id"] = mentor[0]
-            session["reset_role"] = "mentor"
-            return redirect("/mentor_reset_password")
-
-        flash("No mentor account was found with that email address.")
-
-    return render_template("mentor_forgot_password.html")
-
-
-# =========================================================
-# RESET MENTOR PASSWORD
-# =========================================================
-
-@app.route("/mentor_reset_password", methods=["GET", "POST"])
-def mentor_reset_password():
-
-    if session.get("reset_role") != "mentor" or "reset_mentor_id" not in session:
-        return redirect("/mentor_forgot_password")
-
-    if request.method == "POST":
-
-        new_password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
-
-        if new_password != confirm_password:
-            flash("Passwords do not match.")
-            return render_template("mentor_reset_password.html")
-
-        if len(new_password) < 6:
-            flash("Password must contain at least 6 characters.")
-            return render_template("mentor_reset_password.html")
-
-        conn = sqlite3.connect("users.db")
-        cur = conn.cursor()
-
-        cur.execute("""
-            UPDATE mentor_accounts
-            SET password = ?
-            WHERE mentor_id = ?
-        """, (generate_password_hash(new_password), session["reset_mentor_id"]))
-
-        conn.commit()
-        conn.close()
-
-        session.pop("reset_mentor_id", None)
-        session.pop("reset_role", None)
-
-        flash("Your mentor password has been changed successfully. Please log in.")
-        return redirect("/mentor_login")
-
-    return render_template("mentor_reset_password.html")
 
 
 # =========================================================
