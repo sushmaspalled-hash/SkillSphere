@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Roadmap | SkillSphere</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+
+        body {
+            background: #f5f7fb;
+        }
+
+        /* Header */
+
+        .roadmap-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 40px 7%;
+        }
+
+        .roadmap-header h1 {
+            color: white;
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .roadmap-header p {
+            color: #dbeafe;
+            font-size: 16px;
+        }
+
+        /* Main */
+
+        .roadmap-container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        /* Back Button */
+
+        .back-dashboard {
+            display: inline-block;
+            margin-bottom: 25px;
+            padding: 11px 18px;
+            background: white;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .back-dashboard:hover {
+            background: #eff6ff;
+            transform: translateX(-3px);
+        }
+
+        /* Selection Card */
+
+        .selection-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 35px;
+        }
+
+        .selection-card h2 {
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        .selection-card p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .role-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .role-form select {
+            flex: 1;
+            min-width: 250px;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .role-form button {
+            padding: 13px 24px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .role-form button:hover {
+            background: #1d4ed8;
+        }
+
+        /* Roadmap */
+
+        .roadmap-title {
+            margin-bottom: 25px;
+        }
+
+        .roadmap-title h2 {
+            color: #2563eb;
+            margin-bottom: 5px;
+        }
+
+        .roadmap-title p {
+            color: #6b7280;
+        }
+
+        .roadmap-stage {
+            position: relative;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .stage-number {
+            position: absolute;
+            top: 25px;
+            left: -15px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .roadmap-stage h3 {
+            margin-left: 15px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .roadmap-stage p {
+            margin-left: 15px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .skills-box {
+            margin: 18px 0 18px 15px;
+        }
+
+        .skills-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 7px 12px;
+            margin: 4px;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Project */
+
+        .project-box {
+            margin: 20px 0 0 15px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .project-box h4 {
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .project-box p {
+            margin: 0 0 15px 0;
+        }
+
+        .project-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+        }
+
+        .view-btn {
+            background: #7c3aed;
+        }
+
+        .view-btn:hover {
+            background: #6d28d9;
+        }
+
+        .start-btn {
+            background: #059669;
+        }
+
+        .start-btn:hover {
+            background: #047857;
+        }
+
+        /* Modal */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.55);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 750px;
+            margin: 60px auto;
+            padding: 30px;
+            border-radius: 16px;
+            position: relative;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .close:hover {
+            color: #111827;
+        }
+
+        .modal-content h2 {
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section h3 {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .modal-section p,
+        .modal-section li {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .modal-section ul {
+            padding-left: 20px;
+        }
+
+        .folder-structure {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 10px;
+            font-family: monospace;
+            white-space: pre-line;
+            overflow-x: auto;
+        }
+
+        /* Empty */
+
+        .empty-card {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .empty-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .empty-card p {
+            color: #6b7280;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+
+            .roadmap-header {
+                padding: 30px 5%;
+            }
+
+            .roadmap-header h1 {
+                font-size: 28px;
+            }
+
+            .roadmap-container {
+                width: 94%;
+            }
+
+            .stage-number {
+                position: static;
+                margin-bottom: 12px;
+            }
+
+            .roadmap-stage h3,
+            .roadmap-stage p,
+            .skills-box,
+            .project-box {
+                margin-left: 0;
+            }
+
+            .role-form {
+                flex-direction: column;
+            }
+
+            .role-form select,
+            .role-form button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🌐 SkillSphere
+        </div>
+
+        <div>
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/skills">
+                My Skills
+            </a>
+
+            <a href="/courses">
+                Courses
+            </a>
+
+            <a href="/mentors">
+                Mentors
+            </a>
+
+            <a href="/recommendations">
+                Recommendations
+            </a>
+
+            <a href="/skill_gap">
+                Skill Gap
+            </a>
+
+            <a href="/career_roadmap">
+                Career Roadmap
+            </a>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Header -->
+
+    <section class="roadmap-header">
+
+        <h1>
+            🗺️ Career Roadmap
+        </h1>
+
+        <p>
+            Choose your target career and follow a structured learning path.
+        </p>
+
+    </section>
+
+
+    <!-- Main -->
+
+    <main class="roadmap-container">
+
+
+        <!-- Back to Dashboard -->
+
+        <a href="/dashboard" class="back-dashboard">
+            ← Back to Dashboard
+        </a>
+
+
+        <!-- Career Selection -->
+
+        <section class="selection-card">
+
+            <h2>
+                🎯 Choose Your Career
+            </h2>
+
+            <p>
+                Select the career role you want to prepare for.
+            </p>
+
+            <form method="POST" class="role-form">
+
+                <select name="target_role" required>
+
+                    <option value="">
+                        Select a career role
+                    </option>
+
+                    <option value="Data Analyst"
+                        {% if target_role == "Data Analyst" %}selected{% endif %}>
+                        Data Analyst
+                    </option>
+
+                    <option value="Data Scientist"
+                        {% if target_role == "Data Scientist" %}selected{% endif %}>
+                        Data Scientist
+                    </option>
+
+                    <option value="Machine Learning Engineer"
+                        {% if target_role == "Machine Learning Engineer" %}selected{% endif %}>
+                        Machine Learning Engineer
+                    </option>
+
+                    <option value="Python Developer"
+                        {% if target_role == "Python Developer" %}selected{% endif %}>
+                        Python Developer
+                    </option>
+
+                    <option value="Web Developer"
+                        {% if target_role == "Web Developer" %}selected{% endif %}>
+                        Web Developer
+                    </option>
+
+                    <option value="AI Engineer"
+                        {% if target_role == "AI Engineer" %}selected{% endif %}>
+                        AI Engineer
+                    </option>
+
+                    <option value="Business Analyst"
+                        {% if target_role == "Business Analyst" %}selected{% endif %}>
+                        Business Analyst
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    Generate Roadmap 🚀
+                </button>
+
+            </form>
+
+        </section>
+
+
+        {% if roadmap %}
+
+
+        <!-- Roadmap Title -->
+
+        <section class="roadmap-title">
+
+            <h2>
+                🚀 {{ target_role }} Roadmap
+            </h2>
+
+            <p>
+                Follow these stages to build the skills required for your target career.
+            </p>
+
+        </section>
+
+
+        <!-- Roadmap Stages -->
+
+        {% for stage in roadmap %}
+
+        <div class="roadmap-stage">
+
+
+            <div class="stage-number">
+                {{ loop.index }}
+            </div>
+
+
+            <h3>
+                {{ stage.title }}
+            </h3>
+
+
+            <p>
+                {{ stage.description }}
+            </p>
+
+
+            {% if stage.skills %}
+
+            <div class="skills-box">
+
+                <strong>
+                    🧠 Skills to Learn
+                </strong>
+
+                {% for skill in stage.skills %}
+
+                <span class="skill-tag">
+                    {{ skill }}
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+
+            {% if stage.project %}
+
+            <div class="project-box">
+
+                <h4>
+                    💡 Recommended Project
+                </h4>
+
+                <p>
+                    {{ stage.project }}
+                </p>
+
+                <div class="project-buttons">
+
+                    <button
+                        type="button"
+                        class="project-btn view-btn"
+                        onclick="openProjectPlan(
+                            '{{ stage.title|e }}',
+                            '{{ stage.project|e }}'
+                        )">
+                        📋 View Project Plan
+                    </button>
+
+                    <button
+                        type="button"
+                        class="project-btn start-btn"
+                        onclick="openWorkspace(
+                            '{{ stage.title|e }}',
+                            '{{ stage.project|e }}'
+                        )">
+                        🛠️ Start Building This Project
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+        {% endfor %}
+
+
+        {% else %}
+
+
+        <!-- Empty State -->
+
+        <div class="empty-card">
+
+            <h2>
+                🌟 Start Planning Your Career
+            </h2>
+
+            <p>
+                Select a career role above to generate your personalized roadmap.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+    <!-- Project Plan Modal -->
+
+    <div id="projectPlanModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close"
+                  onclick="closeProjectPlan()">
+                &times;
+            </span>
+
+            <h2>
+                📋 Project Plan
+            </h2>
+
+            <div class="modal-section">
+
+                <h3>
+                    Project
+                </h3>
+
+                <p id="planProject"></p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    🎯 Objective
+                </h3>
+
+                <p>
+                    Build a practical project that demonstrates the skills
+                    required for your selected career path.
+                </p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    🛠️ Technologies / Skills
+                </h3>
+
+                <p>
+                    Python, Data Analysis, SQL, APIs, Git, Problem Solving
+                    and other technologies relevant to the selected project.
+                </p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    📌 Development Steps
+                </h3>
+
+                <ul>
+
+                    <li>
+                        Understand the project requirements.
+                    </li>
+
+                    <li>
+                        Collect or prepare the required data.
+                    </li>
+
+                    <li>
+                        Design the project structure.
+                    </li>
+
+                    <li>
+                        Develop the main functionality.
+                    </li>
+
+                    <li>
+                        Test and debug the project.
+                    </li>
+
+                    <li>
+                        Document the project and upload it to GitHub.
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    📁 Suggested Folder Structure
+                </h3>
+
+                <div class="folder-structure">project/
+│
+├── app.py
+├── README.md
+├── requirements.txt
+├── data/
+├── static/
+├── templates/
+├── models/
+└── notebooks/</div>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    📄 Resume Tip
+                </h3>
+
+                <p>
+                    Add the completed project to your resume with the
+                    technologies used, your contribution, and the key
+                    outcome of the project.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Project Workspace Modal -->
+
+    <div id="workspaceModal" class="modal">
+
+        <div class="modal-content">
+
+            <span class="close"
+                  onclick="closeWorkspace()">
+                &times;
+            </span>
+
+            <h2>
+                🛠️ Project Workspace
+            </h2>
+
+            <div class="modal-section">
+
+                <h3>
+                    Project
+                </h3>
+
+                <p id="workspaceProject"></p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    🎯 Project Objective
+                </h3>
+
+                <p>
+                    Create a complete practical project that can be
+                    demonstrated during interviews and added to your
+                    GitHub portfolio.
+                </p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    🧰 Technologies / Skills
+                </h3>
+
+                <p>
+                    Python • SQL • Data Analysis • Machine Learning •
+                    GitHub • Flask • APIs
+                </p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    📁 Suggested Folder Structure
+                </h3>
+
+                <div class="folder-structure">project/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── data/
+│   └── dataset.csv
+│
+├── notebooks/
+│   └── analysis.ipynb
+│
+├── templates/
+│   └── index.html
+│
+├── static/
+│   └── style.css
+│
+└── models/</div>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    🚀 Development Steps
+                </h3>
+
+                <ul>
+
+                    <li>
+                        Create the project folder in VS Code.
+                    </li>
+
+                    <li>
+                        Set up Python environment.
+                    </li>
+
+                    <li>
+                        Install the required libraries.
+                    </li>
+
+                    <li>
+                        Prepare the dataset or input data.
+                    </li>
+
+                    <li>
+                        Develop the main application.
+                    </li>
+
+                    <li>
+                        Create the user interface.
+                    </li>
+
+                    <li>
+                        Test all features.
+                    </li>
+
+                    <li>
+                        Push the project to GitHub.
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    ✅ Expected Output
+                </h3>
+
+                <p>
+                    A working project that demonstrates practical
+                    technical skills and can be shown during interviews.
+                </p>
+
+            </div>
+
+            <div class="modal-section">
+
+                <h3>
+                    💼 Resume Tip
+                </h3>
+
+                <p>
+                    Mention the project under your Projects section with
+                    2–3 bullet points describing the problem, technologies
+                    used, and the result.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JavaScript -->
+
+    <script>
+
+        function openProjectPlan(title, project) {
+
+            document.getElementById("planProject").innerText =
+                project;
+
+            document.getElementById("projectPlanModal").style.display =
+                "block";
+
+        }
+
+
+        function closeProjectPlan() {
+
+            document.getElementById("projectPlanModal").style.display =
+                "none";
+
+        }
+
+
+        function openWorkspace(title, project) {
+
+            document.getElementById("workspaceProject").innerText =
+                project;
+
+            document.getElementById("workspaceModal").style.display =
+                "block";
+
+        }
+
+
+        function closeWorkspace() {
+
+            document.getElementById("workspaceModal").style.display =
+                "none";
+
+        }
+
+
+        window.onclick = function(event) {
+
+            const planModal =
+                document.getElementById("projectPlanModal");
+
+            const workspaceModal =
+                document.getElementById("workspaceModal");
+
+            if (event.target === planModal) {
+
+                planModal.style.display = "none";
+
+            }
+
+            if (event.target === workspaceModal) {
+
+                workspaceModal.style.display = "none";
+
+            }
+
+        };
+
+
+    </script>
+
+
+</body>
+
+</html>

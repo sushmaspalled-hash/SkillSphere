@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Project Generator - SkillSphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: white;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            white-space: pre-wrap;
+            background: #f8fafc;
+            border-left: 5px solid #2563eb;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #1e40af;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 15px;
+            }
+
+            .nav-links {
+                margin-top: 12px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillSphere
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('skills') }}">
+            My Skills
+        </a>
+
+        <a href="{{ url_for('courses') }}">
+            Courses
+        </a>
+
+        <a href="{{ url_for('mentors') }}">
+            Mentors
+        </a>
+
+        <a href="{{ url_for('recommendations') }}">
+            Recommendations
+        </a>
+
+        <a href="{{ url_for('skill_gap') }}">
+            Skill Gap
+        </a>
+
+        <a href="{{ url_for('career_roadmap') }}">
+            Career Roadmap
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <a href="{{ url_for('dashboard') }}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+
+    <div class="header">
+
+        <h1>
+            🚀 AI Project Generator
+        </h1>
+
+        <p>
+            Generate a practical project idea based on your career goal,
+            skills and difficulty level.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Create Your Project
+        </h2>
+
+        <div class="info-box">
+
+            💡 Choose your target career and difficulty.
+            SkillSphere will generate a project plan that you can
+            use for learning, GitHub and your resume.
+
+        </div>
+
+
+        <form method="POST"
+              action="{{ url_for('ai_project_generator') }}">
+
+
+            <div class="form-group">
+
+                <label for="target_role">
+                    🎯 Target Career
+                </label>
+
+                <select
+                    id="target_role"
+                    name="target_role"
+                    required>
+
+                    <option value="">
+                        Select your target career
+                    </option>
+
+                    <option value="Data Analyst">
+                        Data Analyst
+                    </option>
+
+                    <option value="Data Scientist">
+                        Data Scientist
+                    </option>
+
+                    <option value="Machine Learning Engineer">
+                        Machine Learning Engineer
+                    </option>
+
+                    <option value="Python Developer">
+                        Python Developer
+                    </option>
+
+                    <option value="Web Developer">
+                        Web Developer
+                    </option>
+
+                    <option value="AI Engineer">
+                        AI Engineer
+                    </option>
+
+                    <option value="Business Analyst">
+                        Business Analyst
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="current_skills">
+                    📚 Your Current Skills
+                </label>
+
+                <textarea
+                    id="current_skills"
+                    name="current_skills"
+                    placeholder="Example: Python, Pandas, SQL, HTML, CSS"
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="difficulty">
+                    ⚡ Difficulty
+                </label>
+
+                <select
+                    id="difficulty"
+                    name="difficulty"
+                    required>
+
+                    <option value="Easy">
+                        Easy
+                    </option>
+
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
+
+                    <option value="Hard">
+                        Hard
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button type="submit" class="btn">
+                🚀 Generate Project
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if project_result %}
+
+    <div class="card">
+
+        <h2>
+            🤖 Your Generated Project
+        </h2>
+
+        <div class="result">
+{{ project_result }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+</html>

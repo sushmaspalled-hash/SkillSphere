@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Interview Assistant - SkillSphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: white;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #e5e7eb;
+            text-decoration: none;
+            padding: 8px 11px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        .info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #1e40af;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            white-space: pre-wrap;
+            background: #f8fafc;
+            border-left: 5px solid #2563eb;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .tips {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 18px;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .nav-links {
+                margin-top: 12px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        SkillSphere
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+
+        <a href="{{ url_for('skills') }}">My Skills</a>
+
+        <a href="{{ url_for('courses') }}">Courses</a>
+
+        <a href="{{ url_for('mentors') }}">Mentors</a>
+
+        <a href="{{ url_for('recommendations') }}">Recommendations</a>
+
+        <a href="{{ url_for('skill_gap') }}">Skill Gap</a>
+
+        <a href="{{ url_for('career_roadmap') }}">Career Roadmap</a>
+
+        <a href="{{ url_for('ai_project_generator') }}">
+            Project Generator
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <a href="{{ url_for('dashboard') }}" class="back">
+        ← Back to Dashboard
+    </a>
+
+
+    <div class="header">
+
+        <h1>
+            🎤 AI Interview Assistant
+        </h1>
+
+        <p>
+            Practice interview questions based on your target career and current skills.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Start Interview Preparation
+        </h2>
+
+        <div class="info">
+
+            🤖 SkillSphere will generate interview preparation
+            based on your target role, skills and experience level.
+
+        </div>
+
+
+        <form method="POST" action="{{ url_for('ai_interview') }}">
+
+
+            <div class="form-group">
+
+                <label for="target_role">
+                    🎯 Target Career
+                </label>
+
+                <select
+                    id="target_role"
+                    name="target_role"
+                    required
+                >
+
+                    <option value="">
+                        Select your target career
+                    </option>
+
+                    <option value="Data Analyst">
+                        Data Analyst
+                    </option>
+
+                    <option value="Data Scientist">
+                        Data Scientist
+                    </option>
+
+                    <option value="Machine Learning Engineer">
+                        Machine Learning Engineer
+                    </option>
+
+                    <option value="Python Developer">
+                        Python Developer
+                    </option>
+
+                    <option value="Web Developer">
+                        Web Developer
+                    </option>
+
+                    <option value="AI Engineer">
+                        AI Engineer
+                    </option>
+
+                    <option value="Business Analyst">
+                        Business Analyst
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="current_skills">
+                    📚 Your Current Skills
+                </label>
+
+                <textarea
+                    id="current_skills"
+                    name="current_skills"
+                    placeholder="Example: Python, SQL, Pandas, Power BI, Machine Learning"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="experience_level">
+                    🎓 Experience Level
+                </label>
+
+                <select
+                    id="experience_level"
+                    name="experience_level"
+                    required
+                >
+
+                    <option value="Beginner">
+                        Beginner / Student
+                    </option>
+
+                    <option value="Intermediate">
+                        Intermediate
+                    </option>
+
+                    <option value="Advanced">
+                        Advanced
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button type="submit" class="btn">
+                🎤 Generate Interview Preparation
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if interview_result %}
+
+    <div class="card">
+
+        <h2>
+            🤖 Your Interview Preparation
+        </h2>
+
+        <div class="result">
+{{ interview_result }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <div class="card">
+
+        <h2>
+            💡 Interview Tips
+        </h2>
+
+        <div class="tips">
+
+            <strong>1. Understand your projects</strong><br>
+            Be ready to explain what you built, why you built it and what technologies you used.
+            <br><br>
+
+            <strong>2. Practice technical questions</strong><br>
+            Review programming, database, data science and role-specific concepts.
+            <br><br>
+
+            <strong>3. Explain your thinking</strong><br>
+            Don't only give the final answer. Explain your approach clearly.
+            <br><br>
+
+            <strong>4. Be honest about your skills</strong><br>
+            If you don't know something, explain how you would learn or solve it.
+            <br><br>
+
+            <strong>5. Prepare HR questions</strong><br>
+            Practice questions such as "Tell me about yourself", strengths, weaknesses and career goals.
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

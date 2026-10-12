@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Builder | SkillSphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #dbeafe;
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .nav-links a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .logout {
+            background: #dc2626 !important;
+            color: white !important;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px 50px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .generate-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .flash {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 13px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+        }
+
+        /* RESUME */
+
+        .resume-paper {
+            background: white;
+            max-width: 850px;
+            margin: auto;
+            padding: 45px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .resume-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .resume-contact {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .resume-section {
+            margin-top: 22px;
+        }
+
+        .resume-section h3 {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        .resume-section p {
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        .resume-section ul {
+            padding-left: 22px;
+        }
+
+        .resume-section li {
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            max-width: 850px;
+            margin: 20px auto 0;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #16a34a;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background: #15803d;
+        }
+
+        .print-btn {
+            display: block;
+            width: 100%;
+            max-width: 850px;
+            margin: 10px auto 0;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #111827;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .print-btn:hover {
+            background: #000;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .feature {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 30px;
+        }
+
+        .feature h3 {
+            margin: 10px 0 5px;
+        }
+
+        .feature p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 750px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-paper {
+                padding: 25px;
+            }
+        }
+
+        @media print {
+
+            .navbar,
+            .hero,
+            .form-card,
+            .download-btn,
+            .print-btn,
+            .features-card {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                margin: 0;
+                padding: 0;
+            }
+
+            .card {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            .resume-paper {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="{{ url_for('dashboard') }}" class="brand">
+        SkillSphere
+    </a>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+
+        <a href="{{ url_for('skills') }}">My Skills</a>
+
+        <a href="{{ url_for('courses') }}">Courses</a>
+
+        <a href="{{ url_for('mentors') }}">Mentors</a>
+
+        <a href="{{ url_for('recommendations') }}">
+            Recommendations
+        </a>
+
+        <a href="{{ url_for('skill_gap') }}">
+            Skill Gap
+        </a>
+
+        <a href="{{ url_for('career_roadmap') }}">
+            Roadmap
+        </a>
+
+        <a href="{{ url_for('ai_project_generator') }}">
+            AI Projects
+        </a>
+
+        <a href="{{ url_for('ai_interview') }}">
+            AI Interview
+        </a>
+
+        <a href="{{ url_for('ai_resume_builder') }}">
+            Resume Builder
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="hero">
+
+        <h1>
+            📝 AI Resume Builder
+        </h1>
+
+        <p>
+            Create a professional, career-focused resume using your
+            education, skills, projects, experience and achievements.
+        </p>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- FORM -->
+
+    <div class="card form-card">
+
+        <h2>
+            Enter Your Details
+        </h2>
+
+        <p>
+            Fields marked with <span class="required">*</span> are required.
+        </p>
+
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <!-- NAME -->
+
+                <div>
+                    <label>
+                        Full Name <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div>
+                    <label>
+                        Email <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="example@gmail.com"
+                        required
+                    >
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div>
+                    <label>
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        placeholder="+91 XXXXX XXXXX"
+                    >
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div>
+                    <label>
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        name="location"
+                        placeholder="Bengaluru, Karnataka"
+                    >
+                </div>
+
+
+                <!-- CAREER -->
+
+                <div class="full">
+
+                    <label>
+                        Target Career <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="career"
+                        placeholder="Data Scientist / Data Analyst / Software Developer"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EDUCATION -->
+
+                <div class="full">
+
+                    <label>
+                        Education <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        name="education"
+                        placeholder="Example: B.E. Computer Science and Data Science, Atria Institute of Technology, Bengaluru | 2024-2028"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- SKILLS -->
+
+                <div class="full">
+
+                    <label>
+                        Technical Skills <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        name="skills"
+                        placeholder="Python, SQL, Pandas, NumPy, Power BI, Machine Learning, Git"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PROJECTS -->
+
+                <div class="full">
+
+                    <label>
+                        Projects
+                    </label>
+
+                    <textarea
+                        name="projects"
+                        placeholder="Project Name - Technologies used - What you built - Your contribution"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="full">
+
+                    <label>
+                        Internship / Experience
+                    </label>
+
+                    <textarea
+                        name="experience"
+                        placeholder="Company - Role - Duration - Responsibilities"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- CERTIFICATIONS -->
+
+                <div class="full">
+
+                    <label>
+                        Certifications
+                    </label>
+
+                    <textarea
+                        name="certifications"
+                        placeholder="Python Certification, Power BI Certification, AWS Certification..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- ACHIEVEMENTS -->
+
+                <div class="full">
+
+                    <label>
+                        Achievements
+                    </label>
+
+                    <textarea
+                        name="achievements"
+                        placeholder="Hackathons, awards, competitions, leadership activities..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="generate-btn"
+            >
+                ✨ Generate Professional Resume
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- GENERATED RESUME -->
+
+    {% if resume_result %}
+
+    <div class="card">
+
+        <h2>
+            📄 Your Generated Resume
+        </h2>
+
+
+        <div
+            id="resumePaper"
+            class="resume-paper"
+        >
+
+            {{ resume_result | safe }}
+
+        </div>
+
+
+        <!-- DOWNLOAD -->
+
+        <button
+            type="button"
+            class="download-btn"
+            onclick="downloadResumePDF()"
+        >
+            📥 Download Resume as PDF
+        </button>
+
+
+        <!-- PRINT -->
+
+        <button
+            type="button"
+            class="print-btn"
+            onclick="window.print()"
+        >
+            🖨️ Print / Save as PDF
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- FEATURES -->
+
+    <div class="card features-card">
+
+        <h2>
+            🚀 Resume Builder Features
+        </h2>
+
+        <div class="features">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Career Focused
+                </h3>
+
+                <p>
+                    Create a resume based on your target career.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💼
+                </div>
+
+                <h3>
+                    Professional Format
+                </h3>
+
+                <p>
+                    Organizes your skills, education and experience clearly.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📥
+                </div>
+
+                <h3>
+                    PDF Download
+                </h3>
+
+                <p>
+                    Download your generated resume as a PDF.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PDF LIBRARY -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+
+<script>
+
+function downloadResumePDF() {
+
+    const resume = document.getElementById("resumePaper");
+
+    if (!resume) {
+
+        alert("Please generate your resume first.");
+
+        return;
+    }
+
+
+    const nameElement =
+        resume.querySelector("h2");
+
+
+    let name = "Resume";
+
+
+    if (nameElement) {
+
+        name = nameElement.innerText
+            .trim()
+            .replace(/[^a-zA-Z0-9]/g, "_");
+
+    }
+
+
+    const options = {
+
+        margin: 0.4,
+
+        filename: name + "_Resume.pdf",
+
+        image: {
+            type: "jpeg",
+            quality: 0.98
+        },
+
+        html2canvas: {
+            scale: 2,
+            useCORS: true
+        },
+
+        jsPDF: {
+            unit: "in",
+            format: "a4",
+            orientation: "portrait"
+        }
+
+    };
+
+
+    html2pdf()
+        .set(options)
+        .from(resume)
+        .save();
+
+}
+
+</script>
+
+</body>
+</html>

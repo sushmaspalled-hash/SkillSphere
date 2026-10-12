@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Analytics | SkillSphere</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #172554;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #93c5fd;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 35px;
+            border-radius: 18px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            line-height: 1.7;
+            color: #dbeafe;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin: 28px 0 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1d4ed8;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-top: 25px;
+        }
+
+        .progress-item {
+            margin-top: 23px;
+        }
+
+        .progress-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 11px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #60a5fa);
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .score-section {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #2563eb calc(var(--score) * 1%),
+                #e2e8f0 0
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .score-inner {
+            width: 102px;
+            height: 102px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .score-inner strong {
+            font-size: 28px;
+            color: #1d4ed8;
+        }
+
+        .score-inner span {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .score-description {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .skill-tag {
+            padding: 9px 14px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .empty-message {
+            color: #64748b;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        .suggestions {
+            display: grid;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .suggestion {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .suggestion-icon {
+            font-size: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .notice {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            nav a {
+                margin: 5px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .welcome h1 {
+                font-size: 25px;
+            }
+
+            .score-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Skill<span>Sphere</span></div>
+
+    <div>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">My Skills</a>
+        <a href="{{ url_for('courses') }}">Courses</a>
+        <a href="{{ url_for('career_roadmap') }}">Career Roadmap</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <section class="welcome">
+        <h1>📊 Student Performance Analytics</h1>
+        <p>
+            Track your learning journey, review your skills, monitor course
+            progress, and discover the next steps to improve your technical
+            knowledge.
+        </p>
+    </section>
+
+    <h2 class="section-title">Your Learning Overview</h2>
+
+    <section class="stats">
+
+        <div class="card">
+            <div class="stat-icon">🧠</div>
+            <div class="stat-number">{{ total_skills }}</div>
+            <div class="stat-label">Skills Added</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-number">{{ courses_started }}</div>
+            <div class="stat-label">Courses Started</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-number">{{ courses_completed }}</div>
+            <div class="stat-label">Courses Completed</div>
+        </div>
+
+        <div class="card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number">{{ topics_completed }}</div>
+            <div class="stat-label">Topics Completed</div>
+        </div>
+
+    </section>
+
+    <section class="main-grid">
+
+        <div class="card">
+            <h2>📈 Learning Progress</h2>
+
+            <div class="progress-item">
+                <div class="progress-heading">
+                    <span>Course Completion</span>
+                    <strong>{{ course_completion }}%</strong>
+                </div>
+
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        style="width: {{ course_completion }}%;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress-heading">
+                    <span>Topic Completion</span>
+                    <strong>{{ topic_completion }}%</strong>
+                </div>
+
+                <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        style="width: {{ topic_completion }}%;">
+                    </div>
+                </div>
+            </div>
+
+            <p class="empty-message">
+                Your progress updates using the course and topic completion
+                information recorded in SkillSphere.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>🎯 Learning Activity Score</h2>
+
+            <div class="score-section">
+                <div
+                    class="score-circle"
+                    style="--score: {{ readiness_score }};"
+                >
+                    <div class="score-inner">
+                        <strong>{{ readiness_score }}</strong>
+                        <span>OUT OF 100</span>
+                    </div>
+                </div>
+
+                <div class="score-description">
+                    <p>
+                        This score summarizes your recorded skills and
+                        learning progress.
+                    </p>
+                    <br>
+                    <p>
+                        Add skills, track topics, and complete courses to
+                        improve your learning activity score.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💻 Your Technical Skills</h2>
+
+            {% if skills_list %}
+                <div class="skills-list">
+                    {% for skill in skills_list %}
+                        <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-message">
+                    You haven't added any skills yet. Start by adding the
+                    technical skills you have learned.
+                </p>
+
+                <div class="action-buttons">
+                    <a href="{{ url_for('skills') }}"
+                       class="btn btn-primary">
+                        Add My Skills
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>💡 Recommended Next Steps</h2>
+
+            <div class="suggestions">
+                {% for suggestion in suggestions %}
+                    <div class="suggestion">
+                        <span class="suggestion-icon">✨</span>
+                        <span>{{ suggestion }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="action-buttons">
+                <a href="{{ url_for('courses') }}"
+                   class="btn btn-primary">
+                    Explore Courses
+                </a>
+
+                <a href="{{ url_for('career_roadmap') }}"
+                   class="btn btn-secondary">
+                    View Career Roadmap
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+    <div class="notice">
+        <strong>Note:</strong>
+        The Learning Activity Score is an estimate based on information
+        recorded in SkillSphere. It is not a validated measure of academic
+        performance, employability, or job readiness.
+    </div>
+
+</div>
+
+<footer>
+    © 2026 SkillSphere | Learn Skills. Track Progress. Build Your Future.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer | SkillSphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #dbeafe;
+            text-decoration: none;
+            padding: 8px 11px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .nav-links a:hover {
+            background: #1f2937;
+            color: white;
+        }
+
+        .logout {
+            background: #dc2626 !important;
+            color: white !important;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 40px auto;
+            padding: 0 20px 50px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 38px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.18);
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+        }
+
+        .hero p {
+            margin: 0;
+            line-height: 1.7;
+            max-width: 760px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        select,
+        input[type="file"] {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: white;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .upload-box {
+            border: 2px dashed #93c5fd;
+            background: #eff6ff;
+            border-radius: 14px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .upload-box h3 {
+            margin: 8px 0;
+        }
+
+        .upload-box p {
+            margin: 5px 0;
+        }
+
+        .hint {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        input[type="file"] {
+            margin-top: 15px;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .flash {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 13px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .score-box {
+            text-align: center;
+            background: #eff6ff;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .score {
+            font-size: 52px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .score-label {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .section {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 18px;
+            background: #fff;
+        }
+
+        .section h3 {
+            margin-top: 0;
+        }
+
+        .section li {
+            margin: 9px 0;
+            line-height: 1.5;
+        }
+
+        .tip {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .feature {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+        }
+
+        .feature h3 {
+            margin: 10px 0 5px;
+        }
+
+        .feature p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .print-btn {
+            margin-top: 20px;
+            background: #111827;
+        }
+
+        .print-btn:hover {
+            background: #000;
+        }
+
+        @media (max-width: 750px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+        }
+
+        @media print {
+            .navbar,
+            .hero,
+            .upload-card,
+            .print-btn {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .card {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <a href="{{ url_for('dashboard') }}" class="brand">
+        SkillSphere
+    </a>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('skills') }}">
+            My Skills
+        </a>
+
+        <a href="{{ url_for('courses') }}">
+            Courses
+        </a>
+
+        <a href="{{ url_for('mentors') }}">
+            Mentors
+        </a>
+
+        <a href="{{ url_for('recommendations') }}">
+            Recommendations
+        </a>
+
+        <a href="{{ url_for('skill_gap') }}">
+            Skill Gap
+        </a>
+
+        <a href="{{ url_for('career_roadmap') }}">
+            Roadmap
+        </a>
+
+        <a href="{{ url_for('ai_project_generator') }}">
+            AI Projects
+        </a>
+
+        <a href="{{ url_for('ai_interview') }}">
+            AI Interview
+        </a>
+
+        <a href="{{ url_for('ai_resume_builder') }}">
+            Resume Builder
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <h1>
+            📄 AI Resume Analyzer
+        </h1>
+
+        <p>
+            Upload your resume and SkillSphere will analyze it against your
+            selected career, identify matching skills, missing skills and
+            practical improvements.
+        </p>
+
+    </div>
+
+
+    <!-- FLASH MESSAGES -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- UPLOAD CARD -->
+
+    <div class="card upload-card">
+
+        <h2>
+            Analyze Your Resume
+        </h2>
+
+        <p>
+            Select your target career and upload your resume.
+            SkillSphere will read your resume and analyze it locally.
+        </p>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('resume_analyzer') }}"
+            enctype="multipart/form-data"
+        >
+
+
+            <!-- TARGET CAREER -->
+
+            <label for="target_role">
+                🎯 Target Career
+            </label>
+
+            <select
+                id="target_role"
+                name="target_role"
+                required
+            >
+
+                <option value="">
+                    -- Select your target career --
+                </option>
+
+                <option value="Data Analyst">
+                    Data Analyst
+                </option>
+
+                <option value="Data Scientist">
+                    Data Scientist
+                </option>
+
+                <option value="Machine Learning Engineer">
+                    Machine Learning Engineer
+                </option>
+
+                <option value="Python Developer">
+                    Python Developer
+                </option>
+
+                <option value="Web Developer">
+                    Web Developer
+                </option>
+
+                <option value="AI Engineer">
+                    AI Engineer
+                </option>
+
+                <option value="Business Analyst">
+                    Business Analyst
+                </option>
+
+            </select>
+
+
+            <!-- RESUME UPLOAD -->
+
+            <div class="upload-box">
+
+                <div class="upload-icon">
+                    📤
+                </div>
+
+                <h3>
+                    Upload Your Resume
+                </h3>
+
+                <p>
+                    Select your resume from your computer
+                </p>
+
+                <p class="hint">
+                    Supported formats: PDF, DOCX, TXT
+                </p>
+
+
+                <input
+                    type="file"
+                    id="resume_file"
+                    name="resume_file"
+                    accept=".pdf,.docx,.txt"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ANALYZE BUTTON -->
+
+            <button type="submit">
+                🔍 Analyze Resume
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    {% if analysis_result %}
+
+    <div class="card">
+
+        <h2>
+            📊 Resume Analysis
+        </h2>
+
+        {{ analysis_result | safe }}
+
+
+        <button
+            class="print-btn"
+            onclick="window.print()"
+        >
+            🖨️ Print / Save Analysis as PDF
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- FEATURES -->
+
+    <div class="card">
+
+        <h2>
+            ✨ What You'll Get
+        </h2>
+
+
+        <div class="features">
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Career Match
+                </h3>
+
+                <p>
+                    See how closely your resume matches the selected career.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    Skill Analysis
+                </h3>
+
+                <p>
+                    Identify skills already present and important skills you are missing.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💡
+                </div>
+
+                <h3>
+                    Improvements
+                </h3>
+
+                <p>
+                    Get practical suggestions to make your resume stronger.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

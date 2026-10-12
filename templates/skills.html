@@ -41,7 +41,7 @@
             border-radius: 16px;
             padding: 28px;
             margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
         }
 
         .skills-card h2 {
@@ -54,27 +54,34 @@
 
         .add-skill-form {
             display: flex;
+            align-items: flex-start;
             gap: 12px;
             margin-top: 15px;
         }
 
         .add-skill-form input {
             flex: 1;
+            min-width: 0;
         }
 
         .add-skill-form button {
             width: auto;
+            flex-shrink: 0;
             white-space: nowrap;
         }
 
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(min(100%, 220px), 1fr)
+            );
             gap: 15px;
             margin-top: 20px;
         }
 
         .skill-item {
+            min-width: 0;
             background: #f8fafc;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
@@ -89,13 +96,20 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            min-width: 0;
             font-weight: 600;
             color: #374151;
+        }
+
+        .skill-name > span:last-child {
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
 
         .skill-icon {
             width: 38px;
             height: 38px;
+            flex-shrink: 0;
             border-radius: 10px;
             background: #eff6ff;
             display: flex;
@@ -103,19 +117,28 @@
             justify-content: center;
         }
 
+        .delete-form {
+            margin: 0;
+            flex-shrink: 0;
+        }
+
         .delete-btn {
+            display: inline-block;
+            width: auto;
             background: #fee2e2;
             color: #b91c1c;
-            padding: 7px 10px;
+            padding: 9px 12px;
+            border: none;
             border-radius: 7px;
             font-size: 13px;
-            text-decoration: none;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .delete-btn:hover {
             background: #fecaca;
             color: #991b1b;
+            transform: none;
         }
 
         .empty-state {
@@ -140,26 +163,95 @@
             width: auto;
         }
 
-        @media (max-width: 600px) {
+        .flash-messages {
+            margin-bottom: 20px;
+        }
 
+        .flash-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            overflow-wrap: anywhere;
+        }
+
+        .flash-message.success {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .flash-message.error {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
             .skills-container {
                 width: 94%;
+                margin: 25px auto;
             }
 
             .page-header {
-                padding: 35px 5%;
+                padding: 32px 5%;
             }
 
             .page-header h1 {
                 font-size: 28px;
             }
 
+            .skills-card {
+                padding: 22px;
+            }
+
+            .skills-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .skills-container {
+                width: 94%;
+            }
+
+            .page-header {
+                padding: 28px 5%;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+
+            .skills-card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
             .add-skill-form {
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .add-skill-form button {
                 width: 100%;
+            }
+
+            .skill-item {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .skill-name {
+                gap: 8px;
+                font-size: 14px;
+            }
+
+            .delete-btn {
+                padding: 9px 10px;
+            }
+
+            .navigation {
+                flex-direction: column;
             }
 
             .navigation .btn {
@@ -181,10 +273,10 @@
         </div>
 
         <div>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/courses">Courses</a>
-            <a href="/mentors">Mentors</a>
-            <a href="/logout">Logout</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('courses') }}">Courses</a>
+            <a href="{{ url_for('mentors') }}">Mentors</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
         </div>
 
     </nav>
@@ -194,9 +286,7 @@
 
     <section class="page-header">
 
-        <h1>
-            🧠 My Skills
-        </h1>
+        <h1>🧠 My Skills</h1>
 
         <p>
             Manage your skills and personalize your learning journey.
@@ -209,14 +299,26 @@
 
     <main class="skills-container">
 
+        <!-- Display Flask messages -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
 
         <!-- Add Skill -->
 
         <section class="skills-card">
 
-            <h2>
-                ➕ Add a New Skill
-            </h2>
+            <h2>➕ Add a New Skill</h2>
 
             <p>
                 Add skills you are interested in learning or improving.
@@ -224,7 +326,7 @@
 
             <form
                 method="POST"
-                action="/add_skill"
+                action="{{ url_for('add_skill') }}"
                 class="add-skill-form"
             >
 
@@ -232,6 +334,7 @@
                     type="text"
                     name="skill_name"
                     placeholder="Example: Python, Java, Data Science..."
+                    maxlength="100"
                     required
                 >
 
@@ -248,14 +351,11 @@
 
         <section class="skills-card">
 
-            <h2>
-                📋 Your Skills
-            </h2>
+            <h2>📋 Your Skills</h2>
 
             <p>
                 Skills currently added to your profile.
             </p>
-
 
             {% if skills %}
 
@@ -267,23 +367,29 @@
 
                             <div class="skill-name">
 
-                                <span class="skill-icon">
-                                    💡
-                                </span>
+                                <span class="skill-icon">💡</span>
 
-                                <span>
-                                    {{ skill[1] }}
-                                </span>
+                                <span>{{ skill[1] }}</span>
 
                             </div>
 
-                            <a
-                                href="/delete_skill/{{ skill[0] }}"
-                                class="delete-btn"
-                                onclick="return confirm('Are you sure you want to delete this skill?');"
+                            <!-- Delete uses POST, not a GET link -->
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('delete_skill', skill_id=skill[0]) }}"
+                                class="delete-form"
+                                onsubmit="return confirm('Are you sure you want to delete this skill?');"
                             >
-                                Delete
-                            </a>
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
 
                         </div>
 
@@ -295,13 +401,9 @@
 
                 <div class="empty-state">
 
-                    <div class="empty-icon">
-                        🧠
-                    </div>
+                    <div class="empty-icon">🧠</div>
 
-                    <h3>
-                        No skills added yet
-                    </h3>
+                    <h3>No skills added yet</h3>
 
                     <p>
                         Add your first skill above to personalize
@@ -319,16 +421,15 @@
 
         <div class="navigation">
 
-            <a href="/dashboard" class="btn">
+            <a href="{{ url_for('dashboard') }}" class="btn">
                 ← Dashboard
             </a>
 
-            <a href="/recommendations" class="btn">
+            <a href="{{ url_for('recommendations') }}" class="btn">
                 🎯 View Recommendations
             </a>
 
         </div>
-
 
     </main>
 

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Career Advisor | SkillSphere</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            padding: 16px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 13px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+        .logout {
+            background: #dc2626;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        .skills-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .no-skills {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            border-color: #4f46e5;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .btn {
+            border: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #3730a3;
+        }
+
+        .back-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #4f46e5;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .result {
+            background: #f9fafb;
+            border-left: 5px solid #4f46e5;
+            padding: 25px;
+            border-radius: 8px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ai-icon {
+            font-size: 28px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .flash {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                gap: 15px;
+            }
+
+            .nav-links {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🚀 SkillSphere
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('skills') }}">
+            My Skills
+        </a>
+
+        <a href="{{ url_for('courses') }}">
+            Courses
+        </a>
+
+        <a href="{{ url_for('mentors') }}">
+            Mentors
+        </a>
+
+        <a href="{{ url_for('recommendations') }}">
+            Recommendations
+        </a>
+
+        <a href="{{ url_for('skill_gap') }}">
+            Skill Gap
+        </a>
+
+        <a href="{{ url_for('career_roadmap') }}">
+            Career Roadmap
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <a href="{{ url_for('dashboard') }}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+
+    <div class="header">
+
+        <h1>🤖 AI Career Advisor</h1>
+
+        <p>
+            Get a personalized career development plan based on your
+            skills, interests, and target career.
+        </p>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- CURRENT SKILLS -->
+
+    <div class="card">
+
+        <h2>🎯 Your Current Skills</h2>
+
+        {% if current_skills %}
+
+            <div class="skills-box">
+
+                {% for skill in current_skills %}
+
+                    <span class="skill">
+                        {{ skill }}
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="no-skills">
+                You haven't added any skills yet.
+                Add skills from the My Skills page for a more
+                personalized AI recommendation.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- AI FORM -->
+
+    <div class="card">
+
+        <div class="ai-title">
+
+            <span class="ai-icon">🤖</span>
+
+            <h2>Ask Your AI Career Advisor</h2>
+
+        </div>
+
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="target_role">
+                    Target Career
+                </label>
+
+                <select name="target_role" id="target_role" required>
+
+                    <option value="">
+                        Select your target career
+                    </option>
+
+                    <option value="Data Analyst">
+                        Data Analyst
+                    </option>
+
+                    <option value="Data Scientist">
+                        Data Scientist
+                    </option>
+
+                    <option value="Machine Learning Engineer">
+                        Machine Learning Engineer
+                    </option>
+
+                    <option value="Python Developer">
+                        Python Developer
+                    </option>
+
+                    <option value="Web Developer">
+                        Web Developer
+                    </option>
+
+                    <option value="AI Engineer">
+                        AI Engineer
+                    </option>
+
+                    <option value="Business Analyst">
+                        Business Analyst
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="experience_level">
+                    Experience Level
+                </label>
+
+                <select name="experience_level" id="experience_level">
+
+                    <option value="College student / Beginner">
+                        College Student / Beginner
+                    </option>
+
+                    <option value="Beginner">
+                        Beginner
+                    </option>
+
+                    <option value="Intermediate">
+                        Intermediate
+                    </option>
+
+                    <option value="Advanced">
+                        Advanced
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="interests">
+                    Your Interests
+                </label>
+
+                <textarea
+                    name="interests"
+                    id="interests"
+                    placeholder="Example: Data analysis, AI, machine learning, Python projects, visualization..."
+                ></textarea>
+
+            </div>
+
+
+            <button type="submit" class="btn">
+                ✨ Generate My Career Plan
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- AI RESULT -->
+
+    {% if ai_result %}
+
+    <div class="card">
+
+        <div class="ai-title">
+
+            <span class="ai-icon">✨</span>
+
+            <h2>Your Personalized AI Career Plan</h2>
+
+        </div>
+
+
+        <div class="info-grid">
+
+            <div class="info-box">
+
+                <strong>🧠 Powered By</strong>
+
+                SkillSphere AI Career Advisor
+
+            </div>
+
+            <div class="info-box">
+
+                <strong>🎯 Goal</strong>
+
+                Personalized career development
+
+            </div>
+
+            <div class="info-box">
+
+                <strong>📚 Focus</strong>
+
+                Skills, projects & interview preparation
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <div class="result">
+{{ ai_result }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+</html>
